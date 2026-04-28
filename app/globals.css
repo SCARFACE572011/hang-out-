@@ -1,26 +1,281 @@
+@import url("https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap");
+
 @import "tailwindcss";
 
+/* ─── Design Tokens ─────────────────────────────────────────── */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --bg: #07080f;
+  --surface: rgba(255, 255, 255, 0.04);
+  --surface-hover: rgba(255, 255, 255, 0.07);
+  --border: rgba(255, 255, 255, 0.08);
+  --border-bright: rgba(0, 245, 212, 0.35);
+  --accent: #00f5d4;
+  --accent-dim: rgba(0, 245, 212, 0.15);
+  --accent-glow: rgba(0, 245, 212, 0.4);
+  --pink: #ff3c6e;
+  --pink-dim: rgba(255, 60, 110, 0.15);
+  --gold: #ffc93c;
+  --text: #e8e8f4;
+  --muted: #5a5a7a;
+  --font-display: "Syne", sans-serif;
+  --font-mono: "Space Mono", monospace;
+  --font-body: "DM Sans", sans-serif;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+/* ─── Base ───────────────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.6;
+  min-height: 100dvh;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ─── Noise Texture Overlay ──────────────────────────────────── */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 200px 200px;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.6;
+}
+
+/* ─── Scrollbar ──────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--muted); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+/* ─── Selection ──────────────────────────────────────────────── */
+::selection {
+  background: var(--accent-dim);
+  color: var(--accent);
+}
+
+/* ─── Utility Classes ────────────────────────────────────────── */
+.font-display { font-family: var(--font-display); }
+.font-mono    { font-family: var(--font-mono); }
+.font-body    { font-family: var(--font-body); }
+
+/* ─── Glowing accent text ────────────────────────────────────── */
+.text-accent {
+  color: var(--accent);
+  text-shadow: 0 0 20px var(--accent-glow), 0 0 60px rgba(0, 245, 212, 0.15);
+}
+.text-pink {
+  color: var(--pink);
+  text-shadow: 0 0 20px rgba(255, 60, 110, 0.5);
+}
+.text-gold {
+  color: var(--gold);
+  text-shadow: 0 0 20px rgba(255, 201, 60, 0.4);
+}
+
+/* ─── Glass Card ─────────────────────────────────────────────── */
+.glass {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+.glass-bright {
+  background: rgba(0, 245, 212, 0.04);
+  border: 1px solid var(--border-bright);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  box-shadow:
+    0 0 0 1px rgba(0, 245, 212, 0.08),
+    0 8px 32px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+/* ─── Glowing button ─────────────────────────────────────────── */
+.btn-glow {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, var(--accent) 0%, #00d4b8 100%);
+  color: #07080f;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  border: none;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  box-shadow: 0 0 20px var(--accent-glow), 0 4px 24px rgba(0, 0, 0, 0.5);
+}
+.btn-glow::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, transparent 60%);
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+.btn-glow:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 36px var(--accent-glow), 0 8px 32px rgba(0, 0, 0, 0.5);
+}
+.btn-glow:hover::before { opacity: 1; }
+.btn-glow:active { transform: translateY(0); }
+
+/* ─── Pink danger button ─────────────────────────────────────── */
+.btn-pink {
+  background: linear-gradient(135deg, var(--pink) 0%, #e0284f 100%);
+  color: #fff;
+  box-shadow: 0 0 20px rgba(255, 60, 110, 0.4), 0 4px 24px rgba(0, 0, 0, 0.5);
+}
+.btn-pink:hover {
+  box-shadow: 0 0 36px rgba(255, 60, 110, 0.6), 0 8px 32px rgba(0, 0, 0, 0.5);
+}
+
+/* ─── Scanline boot effect ───────────────────────────────────── */
+@keyframes scanline {
+  0%   { transform: translateY(-100%); opacity: 1; }
+  100% { transform: translateY(200vh); opacity: 0; }
+}
+.scanline {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  pointer-events: none;
+  z-index: 9999;
+  animation: scanline 1.2s ease-out forwards;
+}
+
+/* ─── Typewriter cursor ──────────────────────────────────────── */
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
+}
+.cursor {
+  display: inline-block;
+  width: 3px;
+  height: 0.85em;
+  background: var(--accent);
+  margin-left: 4px;
+  vertical-align: middle;
+  animation: blink 1s step-end infinite;
+  border-radius: 1px;
+}
+
+/* ─── Stamp animation ────────────────────────────────────────── */
+@keyframes stamp {
+  0%   { transform: scale(3) rotate(-8deg); opacity: 0; }
+  60%  { transform: scale(0.95) rotate(2deg); opacity: 1; }
+  80%  { transform: scale(1.05) rotate(-1deg); }
+  100% { transform: scale(1) rotate(0deg); opacity: 1; }
+}
+.stamp { animation: stamp 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+
+/* ─── Progress bar fill ──────────────────────────────────────── */
+@keyframes fillBar {
+  from { width: 0%; }
+}
+
+/* ─── Shimmer on badge ───────────────────────────────────────── */
+@keyframes shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+.shimmer-text {
+  background: linear-gradient(
+    90deg,
+    var(--gold) 0%,
+    #fff8e7 40%,
+    var(--gold) 60%,
+    #ffa500 100%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: shimmer 3s linear infinite;
+}
+
+/* ─── Pulse ring ─────────────────────────────────────────────── */
+@keyframes pulseRing {
+  0%   { transform: scale(1); opacity: 0.5; }
+  100% { transform: scale(1.8); opacity: 0; }
+}
+.pulse-ring {
+  position: absolute;
+  inset: -6px;
+  border-radius: inherit;
+  border: 1px solid var(--accent);
+  animation: pulseRing 1.5s ease-out infinite;
+  pointer-events: none;
+}
+
+/* ─── Glitch effect ──────────────────────────────────────────── */
+@keyframes glitch1 {
+  0%, 100% { clip-path: inset(0 0 95% 0); transform: translate(-4px, 0); }
+  25%       { clip-path: inset(40% 0 40% 0); transform: translate(4px, 0); }
+  50%       { clip-path: inset(70% 0 10% 0); transform: translate(-2px, 0); }
+  75%       { clip-path: inset(20% 0 60% 0); transform: translate(2px, 0); }
+}
+@keyframes glitch2 {
+  0%, 100% { clip-path: inset(80% 0 5% 0); transform: translate(4px, 0); color: var(--pink); }
+  25%       { clip-path: inset(10% 0 70% 0); transform: translate(-4px, 0); }
+  50%       { clip-path: inset(50% 0 30% 0); transform: translate(3px, 0); color: var(--accent); }
+  75%       { clip-path: inset(5% 0 85% 0); transform: translate(-2px, 0); }
+}
+
+/* ─── Floating smiley animations (3 distinct paths) ─────────── */
+@keyframes floatSmiley1 {
+  0%   { transform: translateY(0px)   rotate(0deg)   scale(1); }
+  25%  { transform: translateY(-18px) rotate(8deg)   scale(1.06); }
+  50%  { transform: translateY(-6px)  rotate(-4deg)  scale(0.97); }
+  75%  { transform: translateY(-22px) rotate(10deg)  scale(1.04); }
+  100% { transform: translateY(0px)   rotate(0deg)   scale(1); }
+}
+@keyframes floatSmiley2 {
+  0%   { transform: translateY(0px)   rotate(0deg)   scale(1); }
+  30%  { transform: translateY(14px)  rotate(-10deg) scale(1.05); }
+  60%  { transform: translateY(-10px) rotate(6deg)   scale(0.95); }
+  100% { transform: translateY(0px)   rotate(0deg)   scale(1); }
+}
+@keyframes floatSmiley3 {
+  0%   { transform: translateY(0px)   rotate(0deg)   scale(1); }
+  20%  { transform: translateY(-12px) rotate(15deg)  scale(1.08); }
+  55%  { transform: translateY(8px)   rotate(-8deg)  scale(0.94); }
+  80%  { transform: translateY(-16px) rotate(5deg)   scale(1.03); }
+  100% { transform: translateY(0px)   rotate(0deg)   scale(1); }
+}
+
+/* ─── Orb animations ─────────────────────────────────────────── */
+@keyframes drift1 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33%       { transform: translate(40px, -30px) scale(1.05); }
+  66%       { transform: translate(-20px, 20px) scale(0.97); }
+}
+@keyframes drift2 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33%       { transform: translate(-50px, 40px) scale(0.95); }
+  66%       { transform: translate(30px, -20px) scale(1.08); }
+}
+@keyframes drift3 {
+  0%, 100% { transform: translate(0, 0); }
+  50%       { transform: translate(25px, 35px) scale(1.04); }
 }
