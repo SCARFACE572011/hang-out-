@@ -64,6 +64,12 @@ export const config = {
     { label: "Regret Probability", value: 0, unit: "%" },
   ],
 
+  // Hangout date options shown after YES
+  dates: [
+    { label: "April 29", day: "Tuesday", year: "2026", value: "4/29/26" },
+    { label: "May 6",    day: "Wednesday", year: "2026", value: "5/06/26" },
+  ],
+
   // Footer
   footer: {
     line1: "This invite was crafted with unnecessary dedication.",
