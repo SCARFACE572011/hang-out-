@@ -4,7 +4,7 @@
 
 export const config = {
   // Your friend's name
-  friendName: "Sasha",
+  friendName: "Sasha & Kolman",
 
   // Hero section
   hero: {
